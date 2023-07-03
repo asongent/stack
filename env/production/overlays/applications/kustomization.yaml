@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - apps/namespaces.yaml 
+  # - apps/secrets.yaml
+   
+  #   # Mersh
+  # - apps/istio.yaml  
+  # # - apps/cluster-local-gateway.yaml 
+  # - apps/gateway-vs-resources.yaml 
+  # # - apps/nginx.yaml  
+
+  #   # Container Registry
+  # - apps/jfrog.yaml  
+
+  #   # Data Analytics
+  # - apps/airflow.yaml
+
+    # User Management
+  - apps/keycloak.yaml    
+           
+  #   # Monitoring
+  # - apps/monitoring.yaml
+  # # - apps/metrics-server.yaml 
+  # # - apps/metrics
+  # # - apps/grafana.yaml 
+
+
+  #   # Hubs
+  # - app/jupytherhub.yaml       
+  
+  #   #Serverless
+  # - apps/knative-serving.yaml             
+  # - apps/knative.yaml
+  # - apps/seldon-deploy.yaml  
+  
+  #   #Governance and Tracing
+  # - apps/neuvector.yaml
+  # - apps/kyverno.yaml  
+  # - apps/knative-eventing.yaml
+  # - apps/jaeger.yaml     
+  
+  #   # Version Control
+  # - apps/gitlab.yaml                   
+     
+  #   #Serverless Modelss
+  # - apps/knative-models.yaml     
+  # - apps/seldon-model.yaml          
+
+  #  # Scanning
+  # - apps/sonarqube.yaml       

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: seldon-models
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL:  https://github.com/asongent/stack.git
+    targetRevision: HEAD
+    path: models/seldon-model
+  destination:
+    namespace: models
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

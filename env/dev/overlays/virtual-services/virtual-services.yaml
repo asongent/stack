@@ -1,0 +1,272 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: grafana-server
+  namespace: monitoring
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'grafana.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: prometheus-grafana.monitoring.svc.cluster.local
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: prometheus
+  namespace: monitoring
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'prom.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
+        port:
+          number: 9090
+
+
+# ####This configuration below works when - --insecure flag is added to commands section of argocd-server deployment
+      # - command:
+      #   - argocd-server
+      #   - --insecure #add this line
+      #   - --staticassets
+      #   - /shared/app
+      #   - --redis
+--- 
+
+apiVersion: networking.istio.io/v1alpha3 #networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  gateways:
+    - istio-system/general-gateway
+  hosts:
+    - argocd.stack.fredgentech.net
+  http:
+    - route:
+      - destination:
+          host: argocd-server
+          port:
+            number: 80
+
+
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: jaeger
+  namespace: tracing
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'jaegar.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: jaeger-query.tracing.svc.cluster.local
+        port:
+          number: 80
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: neuvector
+  namespace: neuvector
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'neuvector.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: neuvector-service-webui
+        port:
+          number: 8443
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: artifactory
+  namespace: artifactory
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'artifactory.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: jfrog-artifactory
+        port:
+          number: 8082
+
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: sonarqube
+  namespace: sonarqube
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'sonarqube.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: sonarqube
+        port:
+          number: 80
+---
+## Gitlab config
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: gitlab
+  namespace: gitlab
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'gitlab.stack.fredgentech.com'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: gitlab.svc.cluster.local
+        port:
+          number:  9000
+
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   labels:
+#   name: minio-vs
+#   namespace: gitlab
+# spec:
+#   gateways:
+#   - istio-system/general-gateway
+#   hosts:
+#   - 'minio.fredgentech.com'
+#   http:
+#   - retries:
+#       attempts: 3
+#       perTryTimeout: 2s
+#     match:
+#     - uri:
+#         prefix: /
+#     route:
+#     - destination:
+#         host: release-name-minio-svc.gitlab.svc.cluster.local
+#         port:
+#           number:  9000
+
+
+# --- 
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: argocd
+#   namespace: gitlab
+# spec:
+#   gateways:
+#     - istio-system/general-gateway
+#   hosts:
+#     - argocd.fredgentech.net
+#   http:
+#     - route:
+#       - destination:
+#           host: release-name-minio-svc
+#           port:
+#             number: 9000
+# --- 
+##This config is for user management 
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+  name: keycloak
+  namespace: keycloak
+spec:
+  gateways:
+  - istio-system/general-gateway
+  hosts:
+  - 'keycloak.stack.fredgentech.net'
+  http:
+  - retries:
+      attempts: 3
+      perTryTimeout: 2s
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: keycloak-http
+        port:
+          number: 80
+
+  
